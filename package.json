@@ -1,0 +1,20 @@
+{
+  "name": "stephen-king-reading-graph",
+  "version": "1.0.0",
+  "description": "Static website that visualizes Stephen King novels with spoiler/reading-order guidance.",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "preview": "npx serve ."
+  },
+  "keywords": [
+    "stephen-king",
+    "reading-order",
+    "spoilers",
+    "visualization"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+}
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stephen King Reading Graph</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div>
+          <h1>Stephen King Reading Graph</h1>
+          <p class="subtitle">
+            Visual guide to connections, reading order, and spoiler risk.
+          </p>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section class="graph-panel">
+          <div class="graph-toolbar">
+            <div class="legend">
+              <span class="legend-item">
+                <span class="legend-dot legend-dot-safe"></span> Spoiler-safe /
+                mostly standalone
+              </span>
+              <span class="legend-item">
+                <span class="legend-dot legend-dot-linked"></span> Connected /
+                minor spoilers
+              </span>
+              <span class="legend-item">
+                <span class="legend-dot legend-dot-spoiler"></span> Strong
+                spoilers or tight series
+              </span>
+            </div>
+            <div class="controls">
+              <label class="toggle">
+                <input id="toggleSpoilerEdges" type="checkbox" checked />
+                <span>Show spoiler/reading-order links</span>
+              </label>
+              <label class="toggle">
+                <input id="filterSpoilerSafe" type="checkbox" />
+                <span>Only show spoiler-safe starting books</span>
+              </label>
+              <button id="toggleSortMode" class="toggle" type="button">
+                Order: by year
+              </button>
+            </div>
+          </div>
+          <div
+            id="graph"
+            class="graph-container"
+            aria-label="Graph of Stephen King novels"
+          ></div>
+
+          <section class="book-grid-section" aria-label="Stephen King book cards">
+            <h2 class="book-grid-title">
+              Books in this graph
+              <span id="bookCount" aria-live="polite"></span>
+            </h2>
+            <div id="bookGrid" class="book-grid"></div>
+          </section>
+        </section>
+
+        <aside class="info-panel">
+          <div id="bookDetails" class="book-details">
+            <h2>How to use this</h2>
+            <p>
+              Each circle is a Stephen King novel or series entry. Lines show
+              “read this first” or “this book can spoil that one”.
+            </p>
+            <ul>
+              <li>Click a book node to see details and suggested order.</li>
+              <li>
+                Colors show how safe it is to start there without spoilers.
+              </li>
+              <li>
+                Use the toggles above the graph to hide links or show only
+                spoiler-safe starting points.
+              </li>
+            </ul>
+            <p class="disclaimer">
+              This is a fan-made guide and not exhaustive. “Spoiler-safe” is a
+              best-effort judgement, not a guarantee.
+            </p>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="app-footer">
+        <span>Fan project – not affiliated with Stephen King or his publishers.</span>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
+
