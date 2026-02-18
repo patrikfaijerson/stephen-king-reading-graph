@@ -736,12 +736,6 @@ function buildBookGrid() {
       img.loading = "lazy";
       cover.appendChild(img);
 
-      const coverInner = document.createElement("div");
-      coverInner.className = "book-card-cover-inner";
-      coverInner.textContent = book.title;
-
-      cover.appendChild(coverInner);
-
       const title = document.createElement("div");
       title.className = "book-card-title";
       title.textContent = book.title;
