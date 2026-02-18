@@ -490,6 +490,33 @@ const novels = [
     isSeriesEntry: false,
     spoilerLevel: "linked",
     notes: "Hitman story with brief connections to The Outsider."
+  },
+  {
+    id: "fairy-tale",
+    title: "Fairy Tale",
+    year: 2022,
+    series: null,
+    isSeriesEntry: false,
+    spoilerLevel: "safe",
+    notes: "Dark fantasy adventure; mostly standalone with light multiverse nods."
+  },
+  {
+    id: "holly",
+    title: "Holly",
+    year: 2023,
+    series: "Holly Gibney",
+    isSeriesEntry: true,
+    spoilerLevel: "spoiler",
+    notes: "Continuation of Holly Gibney's story from Mr. Mercedes and The Outsider; best read after those."
+  },
+  {
+    id: "you-like-it-darker",
+    title: "You Like It Darker",
+    year: 2024,
+    series: null,
+    isSeriesEntry: false,
+    spoilerLevel: "safe",
+    notes: "Recent collection of short fiction; individual stories stand alone."
   }
 ];
 
@@ -530,8 +557,9 @@ const links = [
   // Insomnia / multiverse
   { from: "insomnia", to: "dark-tower-7", reason: "Shares key multiverse concepts with The Dark Tower." },
 
-  // Bill Hodges -> The Outsider
-  { from: "end-of-watch", to: "the-outsider", reason: "The Outsider continues threads from the Bill Hodges trilogy." }
+  // Bill Hodges -> The Outsider -> Holly
+  { from: "end-of-watch", to: "the-outsider", reason: "The Outsider continues threads from the Bill Hodges trilogy." },
+  { from: "the-outsider", to: "holly", reason: "Holly continues Holly Gibney's story from The Outsider and earlier books." }
 ];
 
 const colorScale = {
