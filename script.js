@@ -600,6 +600,27 @@ function setCachedCover(book, value) {
   }
 }
 
+async function tryGoogleBooks(book) {
+  try {
+    const titleQuery = encodeURIComponent(book.searchTitle || book.title);
+    const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:"${titleQuery}"+inauthor:"Stephen King"&maxResults=1`;
+    const res = await fetchWithTimeout(url, { timeout: 10000 });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.items || data.items.length === 0) return null;
+    const volume = data.items[0];
+    const imageLinks = volume.volumeInfo?.imageLinks;
+    if (!imageLinks) return null;
+    // Prefer medium thumbnail, fallback to small or thumbnail
+    const coverUrl = imageLinks.medium || imageLinks.small || imageLinks.thumbnail;
+    if (!coverUrl) return null;
+    // Replace http with https and ensure good size
+    return coverUrl.replace(/^http:/, 'https:').replace(/&zoom=\d+/, '&zoom=1');
+  } catch {
+    return null;
+  }
+}
+
 async function loadCover(book, imgEl) {
   try {
     const cached = getCachedCover(book);
@@ -613,26 +634,40 @@ async function loadCover(book, imgEl) {
       return;
     }
 
-    const titleQuery = encodeURIComponent(book.searchTitle || book.title);
-    const url = `https://openlibrary.org/search.json?title=${titleQuery}&author=Stephen+King&limit=1`;
-    const res = await fetchWithTimeout(url, { timeout: 12000 });
-    if (!res.ok) throw new Error("cover search failed");
-    const data = await res.json();
-    const doc = data.docs && data.docs[0];
-    if (!doc || !doc.cover_i) {
-      // Fallback: generic placeholder with book title text
+    // Try Open Library first
+    let coverUrl = null;
+    try {
+      const titleQuery = encodeURIComponent(book.searchTitle || book.title);
+      const url = `https://openlibrary.org/search.json?title=${titleQuery}&author=Stephen+King&limit=1`;
+      const res = await fetchWithTimeout(url, { timeout: 12000 });
+      if (res.ok) {
+        const data = await res.json();
+        const doc = data.docs && data.docs[0];
+        if (doc && doc.cover_i) {
+          coverUrl = `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;
+        }
+      }
+    } catch {
+      // Continue to Google Books fallback
+    }
+
+    // If Open Library failed, try Google Books
+    if (!coverUrl) {
+      coverUrl = await tryGoogleBooks(book);
+    }
+
+    if (coverUrl) {
+      imgEl.src = coverUrl;
+      setCachedCover(book, coverUrl);
+    } else {
+      // Both sources failed: use placeholder
       const placeholderText = encodeURIComponent(book.title);
       const placeholderUrl = `https://via.placeholder.com/200x320/151832/ffffff?text=${placeholderText}`;
       imgEl.src = placeholderUrl;
       setCachedCover(book, COVER_CACHE_NONE);
-      return;
     }
-    const coverId = doc.cover_i;
-    const coverUrl = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
-    imgEl.src = coverUrl;
-    setCachedCover(book, coverUrl);
   } catch (e) {
-    // Network or API error: use the same generic placeholder
+    // Final fallback: placeholder
     const placeholderText = encodeURIComponent(book.title);
     const placeholderUrl = `https://via.placeholder.com/200x320/151832/ffffff?text=${placeholderText}`;
     imgEl.src = placeholderUrl;
